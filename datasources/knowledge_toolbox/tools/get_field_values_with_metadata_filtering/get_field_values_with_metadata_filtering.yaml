@@ -1,0 +1,59 @@
+identity:
+  name: get_field_values_with_metadata_filtering
+  author: tungnd
+  label:
+    en_US: Get field values with metadata filtering
+
+description:
+  human:
+    en_US: Get field values with metadata filtering. filter_conditions must be valid JSON string
+  llm: Get field values with metadata filtering. filter_conditions must be valid JSON string
+
+parameters:
+  - name: dataset_id
+    type: string
+    label:
+      en_US: Dataset ID
+    human_description:
+      en_US: >-
+        Dataset ID
+    required: true
+    default: ""
+    form: llm
+
+  - name: field_name
+    type: string
+    label:
+      en_US: Field name
+    human_description:
+      en_US: |
+        Field Name to get values
+    required: true
+    default: ""
+    form: llm
+
+  - name: limit
+    type: string
+    label:
+      en_US: Limit
+    human_description:
+      en_US: |
+        Limit number of objects
+    required: true
+    default: ""
+    form: llm
+
+  - name: filter_conditions
+    type: string
+    label:
+      en_US: Filter Conditions
+    human_description:
+      en_US: |
+        Must be a valid JSON string
+    required: true
+    default: ""
+    form: llm
+
+extra:
+  python:
+    source: tools/get_field_values_with_metadata_filtering/get_field_values_with_metadata_filtering.py

@@ -1,0 +1,28 @@
+version: 0.0.4
+type: plugin
+author: tungnd
+name: purpose_knowledge_toolbox
+label:
+  en_US: Purpose Knowledge Toolbox
+description:
+  en_US: Small tools for working with Dify Knowledge API.
+icon: icon.svg
+resource:
+  memory: 268435456
+plugins:
+  tools:
+    - provider/knowledge_toolbox.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: null
+created_at: 2025-07-09T00:00:00.000000000Z
+privacy: PRIVACY.md
+repo: https://github.com/tungnd1734573
+verified: false

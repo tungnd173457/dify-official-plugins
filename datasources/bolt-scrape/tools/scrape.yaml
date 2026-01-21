@@ -1,0 +1,29 @@
+identity:
+  name: scrape
+  author: boltbolt
+  label:
+    en_US: Scrape URL
+description:
+  human:
+    en_US: Scrape content from a URL and remove specified tags.
+  llm: Scraper that fetches a URL and removes content within specified tags.
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+    human_description:
+      en_US: The URL to scrape.
+    form: llm
+  - name: exclude_tags
+    type: string
+    required: false
+    label:
+      en_US: Exclude Tags
+    human_description:
+      en_US: List of tags to exclude (e.g. ["script", "style"]).
+    form: llm
+extra:
+  python:
+    source: tools/scrape.py

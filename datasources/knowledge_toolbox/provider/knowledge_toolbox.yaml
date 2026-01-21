@@ -1,0 +1,40 @@
+identity:
+  author: tungnd
+  name: purpose_knowledge_toolbox
+  label:
+    en_US: Purpose Knowledge Toolbox
+  description:
+    en_US: Small tools for working with Dify Knowledge API.
+  icon: icon.svg
+
+tools:
+  - tools/add_file_url_to_citations/add_file_url_to_citations.yaml
+  - tools/download_file/download_file.yaml
+  - tools/get_full_doc/get_full_doc.yaml
+  - tools/get_brand_names_in_dataset/get_brand_names_in_dataset.yaml
+  - tools/get_document_with_metadata_filtering/get_document_with_metadata_filtering.yaml
+  - tools/get_field_values_with_metadata_filtering/get_field_values_with_metadata_filtering.yaml
+  - tools/group_values_with_filters/group_values_with_filters.yaml
+
+extra:
+  python:
+    source: provider/knowledge_toolbox.py
+
+credentials_for_provider:
+  api_base_url:
+    placeholder:
+      en_US: >-
+        Example: "https://api.dify.ai/v1", "http://api:5001/v1". Requires the trailing "/v1".
+    label:
+      en_US: Dify Knowledge API Base URL
+    required: true
+    type: text-input
+
+  api_key:
+    placeholder:
+      en_US: >-
+        Generate it at "Knowledge" > "API Access" > "API Key" in the Dify Console.
+    label:
+      en_US: Dify Knowledge API Key
+    required: true
+    type: secret-input

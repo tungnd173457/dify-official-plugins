@@ -1,0 +1,26 @@
+identity:
+  name: get_brand_names_in_dataset
+  author: tungnd
+  label:
+    en_US: Retrieves all brand names in a dataset
+
+description:
+  human:
+    en_US: Retrieves all brand names in a dataset
+  llm: Retrieves all brand names in a dataset
+
+parameters:
+  - name: dataset_id
+    type: string
+    label:
+      en_US: Dataset ID
+    human_description:
+      en_US: >-
+        Dataset ID
+    required: true
+    default: ""
+    form: llm
+
+extra:
+  python:
+    source: tools/get_brand_names_in_dataset/get_brand_names_in_dataset.py

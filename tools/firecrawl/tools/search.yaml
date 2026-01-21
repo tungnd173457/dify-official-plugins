@@ -1,0 +1,50 @@
+description:
+  human:
+    en_US: Search the web, get search results with markdown content.
+    zh_Hans: 搜索网络，获取带有 markdown 内容的搜索结果。
+  llm: Search the web, get search results with markdown content.
+extra:
+  python:
+    source: tools/search.py
+identity:
+  author: Firecrawl
+  label:
+    en_US: Search
+    zh_Hans: 搜索
+  name: search
+parameters:
+- form: llm
+  human_description:
+    en_US: The search query.
+    zh_Hans: 搜索关键词。
+  label:
+    en_US: Query
+    zh_Hans: 关键词
+  llm_description: The search query.
+  name: query
+  required: true
+  type: string
+- form: form
+  human_description:
+    en_US: Maximum number of results to return.
+    zh_Hans: 返回的最大结果数。
+  label:
+    en_US: Limit
+    zh_Hans: 限制
+  min: 1
+  name: limit
+  type: number
+  default: 5
+- form: form
+  human_description:
+    en_US: 'Sources to search. Options: web, images, news. Default: web'
+    zh_Hans: '搜索来源。选项：web, images, news。默认：web'
+  label:
+    en_US: Sources
+    zh_Hans: 来源
+  name: sources
+  placeholder:
+    en_US: web
+    zh_Hans: web
+  type: string
+  default: web

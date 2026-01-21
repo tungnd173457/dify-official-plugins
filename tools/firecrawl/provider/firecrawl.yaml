@@ -42,3 +42,4 @@ tools:
   - tools/crawl.yaml
   - tools/map.yaml
   - tools/scrape.yaml
+  - tools/search.yaml

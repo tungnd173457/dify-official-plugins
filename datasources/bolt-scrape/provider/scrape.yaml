@@ -1,0 +1,13 @@
+identity:
+  author: boltbolt
+  name: scrape
+  label:
+    en_US: Scrape
+  description:
+    en_US: Scrape content toolkit.
+  icon: icon.svg
+tools:
+  - tools/scrape.yaml
+extra:
+  python:
+    source: provider/scrape.py

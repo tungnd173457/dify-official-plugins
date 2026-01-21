@@ -63,6 +63,17 @@ class FirecrawlApp:
             raise HTTPError("Failed to perform map after multiple retries")
         return response
 
+    def search(self, query: str, limit: int = 5, sources: list[str] | None = None, **kwargs):
+        endpoint = f"{self.base_url}/v2/search"
+        if sources is None:
+            sources = ["web"]
+        data = {"query": query, "limit": limit, "sources": sources, **kwargs}
+        logger.debug(f"Sent request to {endpoint=} body={data}")
+        response = self._request("POST", endpoint, data)
+        if response is None:
+            raise HTTPError("Failed to search after multiple retries")
+        return response
+
     def crawl_url(
         self, url: str, wait: bool = True, poll_interval: int = 5, idempotency_key: str | None = None, **kwargs
     ):

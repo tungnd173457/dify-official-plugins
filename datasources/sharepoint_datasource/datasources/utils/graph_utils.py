@@ -1,11 +1,52 @@
+from urllib.parse import urlparse, parse_qs, urlencode
 import requests
 import logging
 import mimetypes
 import urllib.parse
 from dify_plugin.entities.datasource import OnlineDriveFile, OnlineDriveFileBucket, OnlineDriveBrowseFilesResponse
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+reject_mime_types = [
+    "audio/",
+    "video/",
+    "application/zip",
+    "application/octet-stream",
+    "application/x-rar-compressed",
+    "application/vnd.microsoft.portable-executable",
+    "application/vnd.apple.installer+xml",
+    "application/vnd.debian.binary-package",
+    "application/vnd.android.package-archive",
+]
+
+reject_extensions = [".psd", ".psb"]
+
+def rag_reject_reason(mime):
+    if mime.startswith("audio/"):
+        return "Audio files are not readable by the system."
+    if mime.startswith("video/"):
+        return "Videos do not contain extractable text."
+    if mime in ["application/zip", "application/octet-stream", "application/x-rar-compressed", "application/vnd.microsoft.portable-executable", "application/vnd.apple.installer+xml", "application/vnd.debian.binary-package", "application/vnd.android.package-archive"]:
+        return "Compressed or binary files are not supported."
+    return "This file type is not supported."
+
+def get_download_url(url: str) -> str:
+    """
+    Get the download URL from the provided URL
+    """
+    parsed = urlparse(url)
+
+    # Get base URL (remove query params)
+    base = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+
+    # Extract only UniqueId parameter
+    query_params = parse_qs(parsed.query)
+    unique_id = query_params.get("UniqueId", [""])[0]
+
+    # Build final clean URL
+    clean_url = f"{base}?{urlencode({'UniqueId': unique_id})}"
+    return clean_url
 
 def parse_path(prefix: str, access_token: str) -> tuple[str, str]:
     """
@@ -195,8 +236,8 @@ def download_file(base_url: str, resource: str, file_id: str, headers: dict, get
         content_url = f"{base_url}/{resource}/{resource_id}/drive/items/{item_id}/content"
 
         # First, get file metadata
-        metadata_params = {"$select": "id,name,size,folder,file"}
-        metadata_response = requests.get(metadata_url, headers=headers, params=metadata_params, timeout=30)
+        # metadata_params = {"$select": "id,name,size,folder,file"}
+        metadata_response = requests.get(metadata_url, headers=headers, timeout=30)
 
         if metadata_response.status_code == 401:
             logger.error(f"Authentication failed: {metadata_response.text[:200]}")
@@ -212,7 +253,35 @@ def download_file(base_url: str, resource: str, file_id: str, headers: dict, get
             raise ValueError(f"Failed to get file metadata: {metadata_response.status_code}")
 
         file_metadata = metadata_response.json()
+
+        # Check file size
+        file_size = file_metadata.get("size", 0)
+        if file_size > 1000 * 1024 * 1024:
+            raise ValueError(f"File size exceeds limit: {file_size} bytes")
+
         file_name = file_metadata.get("name", "unknown")
+
+        # check extension
+        file_extension = Path(file_name).suffix
+        if file_extension in reject_extensions:
+            raise ValueError(f"Cannot download file '{file_name}'. Not supported file extension {file_extension}.")
+
+        # Get file path
+        parent_reference = file_metadata.get("parentReference", {})
+        raw_file_path = parent_reference.get("path", "")
+        file_path = raw_file_path.removeprefix("/drive/root:")
+
+        #Add file path to file_name
+        if file_path:
+            file_name = file_path + "/" + file_name
+
+        # Determine MIME type from file extension or use default
+        mime_type = get_mime_type_from_filename(file_name)
+
+        # check mimetype
+        for reject_mime_type in reject_mime_types:
+            if reject_mime_type in mime_type:
+                raise ValueError(f"Cannot download file '{file_name}'. {rag_reject_reason(mime_type)}")
 
         # Check if it's a folder (has 'folder' facet in SharePoint)
         if "folder" in file_metadata:
@@ -222,7 +291,7 @@ def download_file(base_url: str, resource: str, file_id: str, headers: dict, get
         content_response = requests.get(
             content_url,
             headers=headers,
-            timeout=60,  # Use longer timeout for file downloads
+            timeout=600,  # Use longer timeout for file downloads
             stream=True,  # Stream response for large files
         )
 
@@ -241,8 +310,10 @@ def download_file(base_url: str, resource: str, file_id: str, headers: dict, get
         # Get content
         file_content = content_response.content
 
-        # Determine MIME type from file extension or use default
-        mime_type = get_mime_type_from_filename(file_name)
+        # Get download url
+        base_download_url = content_response.url
+        download_url = get_download_url(base_download_url)
+        file_name = file_name + "@@" + download_url
 
         return file_content, file_name, mime_type
 

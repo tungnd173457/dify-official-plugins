@@ -1,0 +1,70 @@
+identity:
+  name: group_values_with_filters
+  author: tungnd
+  label:
+    en_US: Group values with filters
+
+description:
+  human:
+    en_US: Group values with filters. filter_conditions must be valid JSON string
+  llm: Group values with filters. filter_conditions must be valid JSON string
+
+parameters:
+  - name: dataset_id
+    type: string
+    label:
+      en_US: Dataset ID
+    human_description:
+      en_US: >-
+        Dataset ID
+    required: true
+    default: ""
+    form: llm
+
+  - name: group_field
+    type: string
+    label:
+      en_US: Group Field
+    human_description:
+      en_US: |
+        Field to group by
+    required: true
+    default: ""
+    form: llm
+
+  - name: value_field
+    type: string
+    label:
+      en_US: Value Field
+    human_description:
+      en_US: |
+        Value field to group
+    required: true
+    default: ""
+    form: llm
+
+  - name: limit
+    type: string
+    label:
+      en_US: Limit
+    human_description:
+      en_US: |
+        Limit number of objects to get
+    required: true
+    default: ""
+    form: llm
+
+  - name: filter_conditions
+    type: string
+    label:
+      en_US: Filter Conditions
+    human_description:
+      en_US: |
+        Must be a valid JSON string
+    required: false
+    default: ""
+    form: llm
+
+extra:
+  python:
+    source: tools/group_values_with_filters/group_values_with_filters.py
