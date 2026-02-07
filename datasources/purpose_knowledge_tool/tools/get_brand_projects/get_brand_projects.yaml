@@ -1,0 +1,25 @@
+identity:
+  name: get_brand_projects
+  author: tungnd
+  label:
+    en_US: Get Brand Projects
+
+description:
+  human:
+    en_US: Use this tool to get all projects under a specific brand along with their document types.
+  llm: Use this tool to get all projects under a specific brand along with their document types.
+
+parameters:
+  - name: brand_name
+    type: string
+    required: true
+    label:
+      en_US: Brand Name
+    human_description:
+      en_US: The name of the brand to retrieve projects and documents for (e.g., "Budweiser")
+    llm_description: Provide the brand_name parameter to get all projects under this brand along with their document types.
+    form: llm
+
+extra:
+  python:
+    source: tools/get_brand_projects/get_brand_projects.py

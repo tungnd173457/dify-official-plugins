@@ -1,0 +1,37 @@
+identity:
+  author: tungnd
+  name: purpose_knowledge_tool
+  label:
+    en_US: Purpose Knowledge Tool
+  description:
+    en_US: Tool for working with Purpose Knowledge.
+  icon: icon.png
+
+tools:
+  - tools/get_brand_names/get_brand_names.yaml
+  - tools/get_brand_projects/get_brand_projects.yaml
+  - tools/get_project_documents/get_project_documents.yaml
+  - tools/get_document_content/get_document_content.yaml
+
+extra:
+  python:
+    source: provider/purpose_knowledge_tool.py
+
+credentials_for_provider:
+  api_base_url:
+    placeholder:
+      en_US: >-
+        Example: "https://api.dify.ai/v1", "http://api:5001/v1". Requires the trailing "/v1".
+    label:
+      en_US: Dify Knowledge API Base URL
+    required: true
+    type: text-input
+
+  api_key:
+    placeholder:
+      en_US: >-
+        Generate it at "Knowledge" > "API Access" > "API Key" in the Dify Console.
+    label:
+      en_US: Dify Knowledge API Key
+    required: true
+    type: secret-input
