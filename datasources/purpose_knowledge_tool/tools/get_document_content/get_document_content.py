@@ -12,6 +12,7 @@ class GetDocumentContentTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         dataset_id = tool_parameters.get("dataset_id")
         document_name = tool_parameters.get("document_name")
+        segment_index = tool_parameters.get("segment_index")
 
         if not self.runtime or not self.runtime.credentials:
             raise ToolProviderCredentialValidationError("Tool runtime or credentials are missing")
@@ -35,7 +36,8 @@ class GetDocumentContentTool(Tool):
         url = f"{api_base_url.rstrip('/')}/dataset/documents/content"
         params = {
             "document_name": document_name,
-            "dataset_id": dataset_id
+            "dataset_id": dataset_id,
+            "segment_index": int(segment_index)
         }
         headers = {
             "authorization": f"bearer {api_key}",

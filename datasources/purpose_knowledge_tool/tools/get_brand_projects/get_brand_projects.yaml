@@ -20,6 +20,17 @@ parameters:
     llm_description: Provide the brand_name parameter to get all projects under this brand along with their document types.
     form: llm
 
+  - name: dataset_id
+    type: string
+    label:
+      en_US: Dataset ID
+    human_description:
+      en_US: >-
+        Dataset ID
+    required: true
+    default: ""
+    form: form
+
 extra:
   python:
     source: tools/get_brand_projects/get_brand_projects.py

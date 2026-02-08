@@ -7,7 +7,7 @@ identity:
 description:
   human:
     en_US: Use this tool to retrieve the full content of a document by its name. Provide the document_name and dataset_id parameters.
-  llm: Use this tool to retrieve the full content of a document by providing the document name.
+  llm: Use this tool to retrieve a segment content of a document by providing the document name and segment index. The result will return the content of that segment and the number of segments in the document.
 
 parameters:
   - name: dataset_id
@@ -30,6 +30,18 @@ parameters:
       en_US: >-
         The name of the document to retrieve content for (e.g., "Report 2025.pdf")
     llm_description: The name of the document to retrieve content for (e.g., "Report 2025.pdf")
+    required: true
+    form: llm
+
+  - name: segment_index
+    type: string
+    label:
+      en_US: Segment Index
+    human_description:
+      en_US: >-
+        The 1-based index of the segment to retrieve content for (e.g., 1)
+    llm_description: The 1-based index of the segment to retrieve content for (e.g., 1)
+    default: 1
     required: true
     form: llm
 
