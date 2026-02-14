@@ -9,8 +9,6 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 reject_mime_types = [
-    "audio/",
-    "video/",
     "application/zip",
     "application/octet-stream",
     "application/x-rar-compressed",
@@ -23,10 +21,6 @@ reject_mime_types = [
 reject_extensions = [".psd", ".psb"]
 
 def rag_reject_reason(mime):
-    if mime.startswith("audio/"):
-        return "Audio files are not readable by the system."
-    if mime.startswith("video/"):
-        return "Videos do not contain extractable text."
     if mime in ["application/zip", "application/octet-stream", "application/x-rar-compressed", "application/vnd.microsoft.portable-executable", "application/vnd.apple.installer+xml", "application/vnd.debian.binary-package", "application/vnd.android.package-archive"]:
         return "Compressed or binary files are not supported."
     return "This file type is not supported."

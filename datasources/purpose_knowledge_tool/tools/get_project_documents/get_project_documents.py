@@ -39,9 +39,13 @@ class GetProjectDocumentsTool(Tool):
             "authorization": f"bearer {api_key}",
             "content-type": "application/json",
         }
-        url = f"{api_base_url.rstrip('/')}/dataset/document-type?project={project_name}&dataset_id={dataset_id}"
+        params = {
+            "project": project_name,
+            "dataset_id": dataset_id,
+        }
+        url = f"{api_base_url.rstrip('/')}/dataset/document-type"
         try:
-            response = requests.get(url, headers=headers, timeout=60)
+            response = requests.get(url, headers=headers, params=params, timeout=60)
             response.raise_for_status()
             documents = response.json()
             yield self.create_json_message(documents)
