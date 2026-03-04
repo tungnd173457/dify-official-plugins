@@ -76,7 +76,7 @@ def list_all_resources(
     List all resources (sites/groups)
     """
     # Build query parameters for Graph API
-    params = {"$top": max_keys, "$select": "id,displayName,name,webUrl"}
+    params = {"$select": "id,displayName,name,webUrl"}
     if resource == "sites":
         params["search"] = "*"
 
@@ -158,7 +158,7 @@ def browse_drive(
         url = f"{base_url}/{resource}/{resource_id}/drive/items/{item_id}/children"
 
     # Build query parameters
-    params = {"$top": max_keys, "$select": "id,name,size,folder,file,lastModifiedDateTime"}
+    params = {"$select": "id,name,size,folder,file,lastModifiedDateTime"}
 
     # If pagination parameters exist, add skip parameter
     if next_page_parameters and next_page_parameters.get("skip"):
