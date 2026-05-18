@@ -103,6 +103,22 @@ class ScrapeTool(Tool):
         "webpage",
     ]
 
+    # schema.org types that are site chrome / metadata, never the page's
+    # primary content. Nodes whose every @type is in this set are ignored so
+    # we don't return e.g. the publisher Organization instead of the article.
+    NON_CONTENT_TYPES = {
+        "organization",
+        "website",
+        "breadcrumblist",
+        "listitem",
+        "itemlist",
+        "searchaction",
+        "imageobject",
+        "sitenavigationelement",
+        "wpheader",
+        "wpfooter",
+    }
+
     # Common "title" and "body" keys across schema.org types, tried in order.
     TITLE_KEYS = ["name", "headline", "title"]
     BODY_KEYS = ["description", "articleBody", "text", "reviewBody", "abstract"]
@@ -165,8 +181,14 @@ class ScrapeTool(Tool):
             # lower rank = better; richer node breaks ties
             return (rank, -(has_title + has_body), -len(node))
 
-        usable = [n for n in candidates
-                  if any(n.get(k) for k in cls.TITLE_KEYS + cls.BODY_KEYS)]
+        def is_content(node: dict) -> bool:
+            if not any(node.get(k) for k in cls.TITLE_KEYS + cls.BODY_KEYS):
+                return False
+            types = cls._node_types(node)
+            # drop only if it has types and ALL of them are site chrome
+            return not (types and all(t in cls.NON_CONTENT_TYPES for t in types))
+
+        usable = [n for n in candidates if is_content(n)]
         if not usable:
             return None
         return min(usable, key=score)
